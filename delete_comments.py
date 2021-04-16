@@ -80,4 +80,5 @@ def main():
             time.sleep(random.uniform(0.5, 1.5))
 
 
-main()
+if __name__ == '__main__':
+    main()
