@@ -1,0 +1,6 @@
+vk_api
+beautifulsoup4
+opencv-python
+python_anticaptcha
+scikit-image
+selenium
