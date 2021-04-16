@@ -3,13 +3,11 @@ import random
 import time
 from urllib.parse import urlparse, parse_qs
 
-import cv2
 import vk_api
 from bs4 import BeautifulSoup
-from python_anticaptcha import AnticaptchaClient, ImageToTextTask
-from skimage import io
 
-from sensitive import login, password, anticaptcha_key
+from sensitive import login, password
+from solve_captcha import solve_captcha
 
 
 def parse(url):
@@ -53,18 +51,7 @@ def captcha_handler(captcha):
         Через метод try_again можно попытаться отправить запрос с кодом капчи
     """
     print('CAPTCHA')
-
-    image = io.imread(captcha.get_url())
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    cv2.imwrite('captcha.jpg', image)
-
-    captcha_fp = open('captcha.jpg', 'rb')
-    client = AnticaptchaClient(anticaptcha_key)
-    task = ImageToTextTask(captcha_fp)
-    job = client.createTask(task)
-    job.join()
-    key = job.get_captcha_text()
-
+    key, task_id = solve_captcha(captcha.get_url())
     # Пробуем снова отправить запрос с капчей
     return captcha.try_again(key)
 
